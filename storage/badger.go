@@ -12,7 +12,7 @@ type Badger struct {
 	Conn *badger.DB
 }
 
-// Connect will start redis connection
+// Connect will start badger connection
 func (r *Badger) Connect(database string) {
 	db, err := badger.Open(badger.DefaultOptions(database))
 	if err != nil {
@@ -21,7 +21,7 @@ func (r *Badger) Connect(database string) {
 	r.Conn = db
 }
 
-// Set set bytes file to redis using unique id as key
+// Set set bytes file to badger using unique id as key
 func (r *Badger) Set(key string, value []byte, expired time.Duration) error {
 	err := r.Conn.Update(func(txn *badger.Txn) error {
 		e := badger.NewEntry([]byte(key), value).WithTTL(expired)
@@ -32,7 +32,7 @@ func (r *Badger) Set(key string, value []byte, expired time.Duration) error {
 	return err
 }
 
-// Get get bytes from redis and write bytes as response (file)
+// Get get bytes from badger and write bytes as response (file)
 func (r *Badger) Get(key string) ([]byte, error) {
 
 	var valCopy []byte
